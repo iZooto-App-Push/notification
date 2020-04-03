@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.HashMap;
+
 public class NotificationActionReceiver extends BroadcastReceiver {
 
     private String mUrl;
@@ -16,8 +18,10 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     private  String cid;
     private int btncount;
     private String api_url;
-    private String deeplink;
+    private String additionalData;
     private String phoneNumber;
+    private String act1ID;
+    private String act2ID;
 
 
     @Override
@@ -25,7 +29,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         context.sendBroadcast(it);
         getBundleData(context, intent);
-        String appVersion = Util.getAppVersion();
+        String appVersion = Util.getSDKVersion();
         mUrl.replace("{BROWSERKEYID}", PreferenceUtil.getInstance(iZooto.appContext).getStringData(AppConstant.FCM_DEVICE_TOKEN));
         getBundleData(context, intent);
         try {
@@ -51,7 +55,12 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 @Override
                 void onSuccess(String response) {
                     super.onSuccess(response);
-                    iZooto.notificationClicked();
+                    // iZooto.notificationClicked();
+
+                    // iZooto.notificationClicked(deeplink);
+                    Log.e("Value",""+inApp+additionalData);
+
+
 
                 }
             });
@@ -59,45 +68,85 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 
+        if (additionalData.equalsIgnoreCase(""))
+        {
+            additionalData = "1";
+        }
 
 
+        if (!additionalData.equalsIgnoreCase("1") && inApp >=0)
+        {
 
+            if(additionalData!=null && btncount==0) {
+                iZooto.notificationClicked("NoLink");
+                if (phoneNumber.equalsIgnoreCase(AppConstant.NO) && inApp==1) {
+                    WebViewActivity.startActivity(context, mUrl);
 
-        if (inApp == 1 && phoneNumber.equalsIgnoreCase("No"))
-            WebViewActivity.startActivity(context, mUrl);
-        else {
-            try {
+                } else if(phoneNumber.equalsIgnoreCase(AppConstant.NO) && inApp==0) {
 
-                if(deeplink.equalsIgnoreCase("deeplink")) {
-                    iZooto.HandleDeepLink(mUrl);
-                    Log.e("DeeplInk",deeplink);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(browserIntent);
+
 
                 }
                 else
                 {
-                   if(phoneNumber.equalsIgnoreCase("No")) {
-                       Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
-                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                       context.startActivity(browserIntent);
-                   }
-                   else
-                   {
-                       Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
-                      browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                       context.startActivity(browserIntent);
+                    Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
+                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(browserIntent);
 
-                   }
+                }
+            }
+
+            else
+            {
+                if(!act1ID.isEmpty() || !act2ID.isEmpty())
+                {
+                    String id =act1ID;
+                    String data =mUrl;
+                    HashMap<String,String> hashMap=new HashMap<>();
+                    hashMap.put("id1",id);
+                    hashMap.put("data",data);
+                    additionalData = hashMap.toString();
+                    Log.e("HashMapButton",additionalData);
+                    iZooto.notificationClicked(additionalData);
+
+
+                }
+                else
+                {
+                    iZooto.notificationClicked(additionalData);
+
                 }
 
-//                 Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:555-1212"));
-//                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                 context.startActivity(browserIntent);
-
-
             }
-            catch (Exception ex)
-            {
-                Log.e("ex",ex.toString());
+
+
+        }
+        else
+        {
+            iZooto.notificationClicked("NoLink");
+
+            if (inApp == 1 && phoneNumber.equalsIgnoreCase(AppConstant.NO))
+                WebViewActivity.startActivity(context, mUrl);
+            else {
+                try {
+
+                    if (phoneNumber.equalsIgnoreCase(AppConstant.NO)) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+                        browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(browserIntent);
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
+                        browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(browserIntent);
+
+                    }
+
+                } catch (Exception ex) {
+                    Log.e("ex", ex.toString());
+                }
             }
         }
 
@@ -114,12 +163,17 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 rid = tempBundle.getString(AppConstant.KEY_IN_RID);
             if (tempBundle.containsKey(AppConstant.KEY_IN_CID))
                 cid = tempBundle.getString(AppConstant.KEY_IN_CID);
-             if(tempBundle.containsKey(AppConstant.KEY_IN_BUTOON))
-                 btncount = tempBundle.getInt(AppConstant.KEY_IN_BUTOON);
-             if(tempBundle.containsKey(AppConstant.KEY_IN_DEEP))
-                 deeplink = tempBundle.getString(AppConstant.KEY_IN_DEEP);
-             if(tempBundle.containsKey(AppConstant.KEY_IN_PHONE))
-                 phoneNumber=tempBundle.getString(AppConstant.KEY_IN_PHONE);
+            if(tempBundle.containsKey(AppConstant.KEY_IN_BUTOON))
+                btncount = tempBundle.getInt(AppConstant.KEY_IN_BUTOON);
+            if(tempBundle.containsKey(AppConstant.KEY_IN_ADDITIONALDATA))
+                additionalData = tempBundle.getString(AppConstant.KEY_IN_ADDITIONALDATA);
+            if(tempBundle.containsKey(AppConstant.KEY_IN_PHONE))
+                phoneNumber=tempBundle.getString(AppConstant.KEY_IN_PHONE);
+            if(tempBundle.containsKey(AppConstant.KEY_IN_ACT1ID))
+                act1ID=tempBundle.getString(AppConstant.KEY_IN_ACT1ID);
+            if(tempBundle.containsKey(AppConstant.KEY_IN_ACT2ID))
+                act2ID=tempBundle.getString(AppConstant.KEY_IN_ACT2ID);
+
 
             if (tempBundle.containsKey(AppConstant.KEY_NOTIFICITON_ID)) {
                 NotificationManager notificationManager =

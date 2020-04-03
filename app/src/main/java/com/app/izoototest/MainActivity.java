@@ -1,5 +1,6 @@
 package com.app.izoototest;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
@@ -10,12 +11,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.izooto.NotificationHelperListener;
 import com.izooto.Payload;
 import com.izooto.iZooto;
-import com.izooto.iZootoDeepLinkListener;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         iZooto.initialize(this).setNotificationReceiveListener(this).build();
-
 
     }
 
@@ -112,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
     @Override
     public void onNotificationView(String s) {
         Log.e("NotificationClicked",s);
-
-        //sendNotification();
+     startActivity(new Intent(MainActivity.this,MainActivity.class));
 
     }
 

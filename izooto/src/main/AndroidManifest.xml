@@ -32,7 +32,7 @@
 
 
         <service
-            android:name="com.izooto.MyFirebaseMessagingService"
+            android:name="com.izooto.iZootoMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -41,9 +41,9 @@
         </service>
 
 
-        <meta-data
-            android:name="izooto_enc_key"
-            android:value="${izooto_enc_key}" />
+<!--        <meta-data-->
+<!--            android:name="izooto_enc_key"-->
+<!--            android:value="${izooto_enc_key}" />-->
 
         <meta-data
             android:name="izooto_app_id"
