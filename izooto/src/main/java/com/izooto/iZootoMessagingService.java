@@ -106,7 +106,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
             if(data.get(AppConstant.CAMPNAME)!=null) {
 
                 JSONObject payloadObj = new JSONObject(data.get(AppConstant.CAMPNAME));
-                if (payloadObj.optLong(AppConstant.CREATEDON) <PreferenceUtil.getInstance(this).getLongValue(AppConstant.DEVICE_REGISTRATION_TIMESTAMP)) {
+                if (payloadObj.optLong(AppConstant.CREATEDON) >PreferenceUtil.getInstance(this).getLongValue(AppConstant.DEVICE_REGISTRATION_TIMESTAMP)) {
                     payload = new Payload();
                     payload.setFetchURL(payloadObj.optString(AppConstant.FETCHURL));
                     payload.setKey(payloadObj.optString(AppConstant.KEY));
