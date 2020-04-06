@@ -41,7 +41,6 @@ public class iZootoMessagingService extends FirebaseMessagingService {
 
      private static final String TAG = "iZooto";
      private  Payload payload = null;
-     private String deppLink= null;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         try {
