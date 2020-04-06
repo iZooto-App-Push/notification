@@ -30,6 +30,7 @@ public class iZooto {
     public static Builder mBuilder;
     public static int icon;
     private static Payload payload;
+    public static boolean checkMethodOverrideOrNot;
 
     public static void setSenderId(String senderId) {
         iZooto.senderId = senderId;
@@ -214,6 +215,15 @@ public class iZooto {
         if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
         {
             mBuilder.mNotificationHelper.onNotificationView(data);
+            checkMethodOverrideOrNot=true;
+            Log.e("overrideMethod",""+checkMethodOverrideOrNot);
+
+        }
+        else
+        {
+            checkMethodOverrideOrNot=false;
+            Log.e("overrideMethod",""+checkMethodOverrideOrNot);
+
         }
 
     }
@@ -353,14 +363,17 @@ public class iZooto {
                     payload.setTag(payloadObj.optString(AppConstant.TAG));
                     payload.setBanner(payloadObj.optString(AppConstant.BANNER));
                     payload.setAct_num(payloadObj.optInt(AppConstant.ACTNUM));
+
                     payload.setAct1name(payloadObj.optString(AppConstant.ACT1NAME));
                     payload.setAct1link(payloadObj.optString(AppConstant.ACT1LINK));
                     payload.setAct1icon(payloadObj.optString(AppConstant.ACT1ICON));
                     payload.setAct1ID(payloadObj.optString(AppConstant.ACT1ID));
+
                     payload.setAct2name(payloadObj.optString(AppConstant.ACT2NAME));
                     payload.setAct2link(payloadObj.optString(AppConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(AppConstant.ACT2ICON));
                     payload.setAct1ID(payloadObj.optString(AppConstant.ACT2ID));
+
                     payload.setInapp(payloadObj.optInt(AppConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(AppConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(AppConstant.ICONCOLOR));
@@ -434,8 +447,8 @@ public class iZooto {
 
 
 
-        // if (iZooto.appContext == null)
-        // iZooto.appContext = this;
+       //  if (iZooto.appContext == null)
+      //   iZooto.appContext = this;
         Handler mainHandler = new Handler(Looper.getMainLooper());
         Runnable myRunnable = new Runnable() {
             @Override

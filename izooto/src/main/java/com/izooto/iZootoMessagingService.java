@@ -131,6 +131,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setAct2link(payloadObj.optString(AppConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(AppConstant.ACT2ICON));
                     payload.setAct2ID(payloadObj.optString(AppConstant.ACT2ID));
+
                     payload.setInapp(payloadObj.optInt(AppConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(AppConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(AppConstant.ICONCOLOR));
@@ -176,6 +177,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setAct2link(payloadObj.optString(ShortpayloadConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(ShortpayloadConstant.ACT2ICON));
                     payload.setAct2ID(payloadObj.optString(ShortpayloadConstant.ACT2ID));
+
                     payload.setInapp(payloadObj.optInt(ShortpayloadConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(ShortpayloadConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(ShortpayloadConstant.ICONCOLOR));
