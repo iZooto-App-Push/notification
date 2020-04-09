@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 public class NotificationActionReceiver extends BroadcastReceiver {
@@ -22,11 +24,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     private String phoneNumber;
     private String act1ID;
     private String act2ID;
+    private String langingURL;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+
         context.sendBroadcast(it);
         getBundleData(context, intent);
         String appVersion = Util.getSDKVersion();
@@ -55,12 +59,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 @Override
                 void onSuccess(String response) {
                     super.onSuccess(response);
-                    // iZooto.notificationClicked();
-
-                    // iZooto.notificationClicked(deeplink);
-                    Log.e("Value",""+inApp+additionalData);
-
-
+                   // iZooto.notificationClicked("True");
 
                 }
             });
@@ -77,8 +76,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         if (!additionalData.equalsIgnoreCase("1") && inApp >=0)
         {
 
-            if(additionalData!=null && btncount==0) {
-                iZooto.notificationClicked("NoLink");
+            if(additionalData!=null && btncount>1) {
+                //iZooto.notificationActionHandler(additionalData);
+
                 if (phoneNumber.equalsIgnoreCase(AppConstant.NO) && inApp==1) {
                     WebViewActivity.startActivity(context, mUrl);
 
@@ -99,40 +99,29 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 }
             }
 
-            else
-            {
-                if(!act1ID.isEmpty() || !act2ID.isEmpty())
-                {
-                    String id =act1ID;
-                    String data =mUrl;
-                    HashMap<String,String> hashMap=new HashMap<>();
-                    hashMap.put("id1",id);
-                    hashMap.put("data",data);
-                    additionalData = hashMap.toString();
-                    Log.e("HashMapButton",additionalData);
-                    iZooto.notificationClicked(additionalData);
+            else {
 
-
-                }
-                else
-                {
-                    iZooto.notificationClicked(additionalData);
-
-                }
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("id1", act1ID);
+                hashMap.put("data", mUrl);
+                hashMap.put("ad", additionalData);
+                hashMap.put("lurl", langingURL);
+                hashMap.put("id2", act2ID);
+                hashMap.put("actiontype", String.valueOf(btncount));
+                JSONObject jsonObject = new JSONObject(hashMap);
+                iZooto.notificationActionHandler(jsonObject.toString());
 
             }
-
 
         }
         else
         {
-            iZooto.notificationClicked("NoLink");
+            iZooto.notificationActionHandler("");
 
             if (inApp == 1 && phoneNumber.equalsIgnoreCase(AppConstant.NO))
                 WebViewActivity.startActivity(context, mUrl);
             else {
                 try {
-
                     if (phoneNumber.equalsIgnoreCase(AppConstant.NO)) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
                         browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -141,7 +130,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                         Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
                         browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(browserIntent);
-
                     }
 
                 } catch (Exception ex) {
@@ -173,6 +161,8 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 act1ID=tempBundle.getString(AppConstant.KEY_IN_ACT1ID);
             if(tempBundle.containsKey(AppConstant.KEY_IN_ACT2ID))
                 act2ID=tempBundle.getString(AppConstant.KEY_IN_ACT2ID);
+            if(tempBundle.containsKey(AppConstant.langingURL))
+                langingURL=tempBundle.getString(AppConstant.langingURL);
 
 
             if (tempBundle.containsKey(AppConstant.KEY_NOTIFICITON_ID)) {

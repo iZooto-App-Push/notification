@@ -1,6 +1,7 @@
 package com.app.izoototest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
@@ -11,16 +12,23 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.izooto.NotificationActionHandler;
 import com.izooto.NotificationHelperListener;
 import com.izooto.Payload;
+import com.izooto.WebViewActivity;
 import com.izooto.iZooto;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class MainActivity extends AppCompatActivity implements NotificationHelperListener
+public class MainActivity extends AppCompatActivity implements NotificationHelperListener, NotificationActionHandler
 {
 
     private static String CIPHER_NAME = "AES/CBC/PKCS5PADDING";
@@ -32,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         iZooto.initialize(this).setNotificationReceiveListener(this).build();
+        iZooto.initialize(this).setNotificationActionHandler(this).build();
+
+
 
     }
 
@@ -77,4 +88,10 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
     }
 
 
+    @Override
+    public void notificationOpened(String data) {
+        Log.e("NotificationClicked",data);
+
+
+    }
 }

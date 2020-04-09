@@ -107,6 +107,10 @@ public interface AppConstant {
 
     //// short payload
     String webViewData = "WebViewClient: shouldOverrideUrlLoading";
+    String langingURL="landingURL";
+    String act1URL = "act1URL";
+    String act2URL="act2URL";
+
 
 
 }

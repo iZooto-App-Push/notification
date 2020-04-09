@@ -10,16 +10,13 @@
 
     <application
         android:usesCleartextTraffic="true">
-
         <activity
             android:name="com.izooto.WebViewActivity"
             android:screenOrientation="portrait"
             android:exported="false"
-            android:launchMode="singleTask"
-            />
+            android:launchMode="singleTask" />
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />
-
         <receiver
             android:name="com.izooto.NotificationActionReceiver"
             android:enabled="true">

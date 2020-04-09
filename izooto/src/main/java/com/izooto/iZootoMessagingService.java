@@ -195,11 +195,6 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                 else
                     return;
             }
-
-
-
-
-            // return;
         } catch (Exception e) {
 
             e.printStackTrace();

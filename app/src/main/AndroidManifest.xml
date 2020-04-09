@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
 
-<!--        <meta-data-->
+        <!--        <meta-data-->
 <!--            android:name="izooto_enc_key"-->
 <!--            android:value="${izooto_enc_key}" />-->
 

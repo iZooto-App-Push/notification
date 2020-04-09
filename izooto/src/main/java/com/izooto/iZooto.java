@@ -50,9 +50,6 @@ public class iZooto {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = appInfo.metaData;
             if (bundle != null) {
-//                if (bundle.containsKey(AppConstant.IZOOTO_ENCRYPTION_KEY)) {
-//                    mEncryptionKey = bundle.getString(AppConstant.IZOOTO_ENCRYPTION_KEY);
-//                }
                 if (bundle.containsKey(AppConstant.IZOOTO_APP_ID)) {
                     mIzooToAppId = bundle.getInt(AppConstant.IZOOTO_APP_ID);
                 }
@@ -209,23 +206,28 @@ public class iZooto {
         }
     }
 
-    public static void notificationClicked(String data)
-    {
+    public static void notificationClicked(String data) {
 
-        if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
-        {
+        if (mBuilder != null && mBuilder.mNotificationHelper != null) {
             mBuilder.mNotificationHelper.onNotificationView(data);
-            checkMethodOverrideOrNot=true;
-            Log.e("overrideMethod",""+checkMethodOverrideOrNot);
 
+        }
+
+    }
+    public static void notificationActionHandler(String data)
+    {
+        if(mBuilder!=null && mBuilder.mNotificationActionHandler!=null)
+        {
+            mBuilder.mNotificationActionHandler.notificationOpened(data);
+           // checkMethodOverrideOrNot=true;
+            Lg.e("Call1","Call");
         }
         else
         {
-            checkMethodOverrideOrNot=false;
-            Log.e("overrideMethod",""+checkMethodOverrideOrNot);
+           // checkMethodOverrideOrNot =false;
+            Lg.e("Call2","Call");
 
         }
-
     }
 
 
@@ -234,6 +236,7 @@ public class iZooto {
         Context mContext;
         private TokenReceivedListener mTokenReceivedListener;
         private NotificationHelperListener mNotificationHelper;
+        private NotificationActionHandler mNotificationActionHandler;
         private Builder(Context context) {
             mContext = context;
         }
@@ -244,6 +247,10 @@ public class iZooto {
         }
         public Builder setNotificationReceiveListener(NotificationHelperListener notificationHelper) {
             mNotificationHelper = notificationHelper;
+            return this;
+        }
+        public Builder setNotificationActionHandler(NotificationActionHandler mnotificationActionHandler) {
+            mNotificationActionHandler = mnotificationActionHandler;
             return this;
         }
 
@@ -295,7 +302,7 @@ public class iZooto {
         }
     }
     // send user properties
-    public static void addUserProfile(HashMap<String,String> object)
+    public static void addUserProperty(HashMap<String,String> object)
     {
         final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
         String database = object.toString();
