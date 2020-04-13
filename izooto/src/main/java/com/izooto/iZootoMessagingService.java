@@ -145,6 +145,8 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setPriority(payloadObj.optInt(AppConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(AppConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(AppConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(AppConstant.CFG));
+
                 }
                 else
                     return;
@@ -191,6 +193,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setPriority(payloadObj.optInt(ShortpayloadConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(ShortpayloadConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(ShortpayloadConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(ShortpayloadConstant.CFG));
                 }
                 else
                     return;

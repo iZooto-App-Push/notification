@@ -148,7 +148,6 @@ public class iZooto {
             } catch (UnsupportedEncodingException e) {
                 Lg.e(AppConstant.APP_NAME_TAG, AppConstant.UNEXCEPTION);
             }
-          Log.e("API URL",api_url);
             RestClient.get(api_url, new RestClient.ResponseHandler() {
                 @Override
                 void onSuccess(final String response) {
@@ -256,10 +255,6 @@ public class iZooto {
         }
         public Builder setNotificationReceiveListener(NotificationHelperListener notificationHelper) {
             mNotificationHelper = notificationHelper;
-            return this;
-        }
-        public Builder setNotificationActionHandler(NotificationActionHandler mnotificationActionHandler) {
-            mNotificationActionHandler = mnotificationActionHandler;
             return this;
         }
 
@@ -403,6 +398,8 @@ public class iZooto {
                     payload.setPriority(payloadObj.optInt(AppConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(AppConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(AppConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(AppConstant.CFG));
+
                 }
                 else
                     return;
@@ -448,6 +445,8 @@ public class iZooto {
                     payload.setPriority(payloadObj.optInt(ShortpayloadConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(ShortpayloadConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(ShortpayloadConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(ShortpayloadConstant.CFG));
+
                 }
                 else
                     return;

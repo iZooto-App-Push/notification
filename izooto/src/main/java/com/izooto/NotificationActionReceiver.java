@@ -25,6 +25,10 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     private String act1ID;
     private String act2ID;
     private String langingURL;
+    private String act2URL;
+    private String act1URL;
+    private String btn1Title;
+    private String btn2Title;
 
 
     @Override
@@ -59,8 +63,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 @Override
                 void onSuccess(String response) {
                     super.onSuccess(response);
-                   // iZooto.notificationClicked("True");
-
                 }
             });
         } catch (Exception e) {
@@ -76,43 +78,18 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         if (!additionalData.equalsIgnoreCase("1") && inApp >=0)
         {
 
-            if(additionalData!=null && btncount>1) {
-                //iZooto.notificationActionHandler(additionalData);
-
-                if (phoneNumber.equalsIgnoreCase(AppConstant.NO) && inApp==1) {
-                    WebViewActivity.startActivity(context, mUrl);
-
-                } else if(phoneNumber.equalsIgnoreCase(AppConstant.NO) && inApp==0) {
-
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
-                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    context.startActivity(browserIntent);
-
-
-                }
-                else
-                {
-                    Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
-                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    context.startActivity(browserIntent);
-
-                }
-            }
-
-            else {
-
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("id1", act1ID);
-                hashMap.put("data", mUrl);
-                hashMap.put("ad", additionalData);
-                hashMap.put("lurl", langingURL);
-                hashMap.put("id2", act2ID);
-                hashMap.put("actiontype", String.valueOf(btncount));
-                JSONObject jsonObject = new JSONObject(hashMap);
-                iZooto.notificationActionHandler(jsonObject.toString());
-
-            }
-
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("button1ID", act1ID);
+            hashMap.put("button1Title",btn1Title);
+            hashMap.put("button1URL", act1URL);
+            hashMap.put("additionalData", additionalData);
+            hashMap.put("landingURL", langingURL);
+            hashMap.put("button2ID", act2ID);
+            hashMap.put("button2Title",btn2Title);
+            hashMap.put("button2URL",act2URL);
+            hashMap.put("actionType", String.valueOf(btncount));
+            JSONObject jsonObject = new JSONObject(hashMap);
+            iZooto.notificationActionHandler(jsonObject.toString());
         }
         else
         {
@@ -161,8 +138,17 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 act1ID=tempBundle.getString(AppConstant.KEY_IN_ACT1ID);
             if(tempBundle.containsKey(AppConstant.KEY_IN_ACT2ID))
                 act2ID=tempBundle.getString(AppConstant.KEY_IN_ACT2ID);
-            if(tempBundle.containsKey(AppConstant.langingURL))
-                langingURL=tempBundle.getString(AppConstant.langingURL);
+            if(tempBundle.containsKey(AppConstant.LANDINGURL))
+                langingURL=tempBundle.getString(AppConstant.LANDINGURL);
+            if(tempBundle.containsKey(AppConstant.ACT1URL))
+                act1URL=tempBundle.getString(AppConstant.ACT1URL);
+            if(tempBundle.containsKey(AppConstant.ACT2URL))
+                act2URL=tempBundle.getString(AppConstant.ACT2URL);
+            if(tempBundle.containsKey(AppConstant.ACT1TITLE))
+                btn1Title=tempBundle.getString(AppConstant.ACT1TITLE);
+            if(tempBundle.containsKey(AppConstant.ACT2TITLE))
+                btn2Title=tempBundle.getString(AppConstant.ACT2TITLE);
+
 
 
             if (tempBundle.containsKey(AppConstant.KEY_NOTIFICITON_ID)) {

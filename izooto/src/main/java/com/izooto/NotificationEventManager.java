@@ -19,6 +19,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import org.json.JSONArray;
@@ -142,7 +143,6 @@ public class NotificationEventManager {
                 {
                     icon=R.drawable.ic_notifications_black_24dp;
                 }
-
                 intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
                 Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 intent.putExtra(AppConstant.KEY_WEB_URL, link);
@@ -153,9 +153,13 @@ public class NotificationEventManager {
                 intent.putExtra(AppConstant.KEY_IN_BUTOON,0);
                 intent.putExtra(AppConstant.KEY_IN_ADDITIONALDATA,payload.getAp());
                 intent.putExtra(AppConstant.KEY_IN_PHONE,AppConstant.NO);
-                intent.putExtra(AppConstant.KEY_IN_ACT1ID,"");
-                intent.putExtra(AppConstant.KEY_IN_ACT2ID,"");
-                intent.putExtra(AppConstant.langingURL,payload.getLink());
+                intent.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
+                intent.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
+                intent.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                intent.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                intent.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                intent.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                intent.putExtra(AppConstant.ACT2URL,payload.getAct2link());
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100) /* Request code */, intent,
                         PendingIntent.FLAG_ONE_SHOT);
@@ -210,7 +214,12 @@ public class NotificationEventManager {
                     btn1.putExtra(AppConstant.KEY_IN_ADDITIONALDATA, payload.getAp());
                     btn1.putExtra(AppConstant.KEY_IN_PHONE, phone);
                     btn1.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
-                    btn1.putExtra(AppConstant.langingURL,payload.getLink());
+                    btn1.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
+                    btn1.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                    btn1.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                    btn1.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                    btn1.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                    btn1.putExtra(AppConstant.ACT2URL,payload.getAct2link());
 
 
 
@@ -245,8 +254,14 @@ public class NotificationEventManager {
                     btn2.putExtra(AppConstant.KEY_IN_BUTOON,2);
                     btn2.putExtra(AppConstant.KEY_IN_ADDITIONALDATA,payload.getAp());
                     btn2.putExtra(AppConstant.KEY_IN_PHONE,phone);
+                    btn2.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
                     btn2.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
-                    btn2.putExtra(AppConstant.langingURL,payload.getLink());
+                    btn2.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                    btn2.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                    btn2.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                    btn2.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                    btn2.putExtra(AppConstant.ACT2URL,payload.getAct2link());
+
 
 
 
