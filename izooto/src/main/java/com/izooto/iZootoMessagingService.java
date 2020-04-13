@@ -209,6 +209,8 @@ public class iZootoMessagingService extends FirebaseMessagingService {
             @Override
             public void run() {
                 iZooto.processNotificationReceived(payload);
+                iZooto.notificationView(payload);
+
             } // This is your code
         };
         mainHandler.post(myRunnable);

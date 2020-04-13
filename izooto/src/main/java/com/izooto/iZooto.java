@@ -138,10 +138,8 @@ public class iZooto {
         final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
         if (!preferenceUtil.getBoolean(AppConstant.IS_TOKEN_UPDATED)) {
             String appVersion = Util.getSDKVersion();
-                    Log.e("SDKVersion",appVersion);
             String api_url = "app.php?s=" + AppConstant.STYPE + "&pid=" + mIzooToAppId + "&btype=" + AppConstant.BTYPE + "&dtype=" + AppConstant.DTYPE + "&tz=" + System.currentTimeMillis() + "&bver=" + appVersion +
                     "&os=" + AppConstant.SDKOS + "&allowed=" + AppConstant.ALLOWED + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&check="+Util.getSDKVersion();
-            //mIzooToAppId
 
             try {
                 String deviceName = URLEncoder.encode(Util.getDeviceName(), "utf-8");
@@ -150,7 +148,7 @@ public class iZooto {
             } catch (UnsupportedEncodingException e) {
                 Lg.e(AppConstant.APP_NAME_TAG, AppConstant.UNEXCEPTION);
             }
-
+          Log.e("API URL",api_url);
             RestClient.get(api_url, new RestClient.ResponseHandler() {
                 @Override
                 void onSuccess(final String response) {
@@ -202,34 +200,45 @@ public class iZooto {
             if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
             {
                 mBuilder.mNotificationHelper.onNotificationReceived(payload);
+                Log.e("Used","data");
             }
         }
     }
-
-    public static void notificationClicked(String data) {
-
-        if (mBuilder != null && mBuilder.mNotificationHelper != null) {
-            mBuilder.mNotificationHelper.onNotificationView(data);
-
-        }
-
-    }
     public static void notificationActionHandler(String data)
     {
-        if(mBuilder!=null && mBuilder.mNotificationActionHandler!=null)
+        if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
         {
-            mBuilder.mNotificationActionHandler.notificationOpened(data);
-           // checkMethodOverrideOrNot=true;
+            mBuilder.mNotificationHelper.onNotificationOpened(data);
+
+            // checkMethodOverrideOrNot=true;
             Lg.e("Call1","Call");
         }
         else
         {
-           // checkMethodOverrideOrNot =false;
+            // checkMethodOverrideOrNot =false;
             Lg.e("Call2","Call");
 
         }
     }
 
+
+//    public static void notificationActionHandler(String data)
+//    {
+//        if(mBuilder!=null && mBuilder.mNotificationActionHandler!=null)
+//        {
+//            mBuilder.mNotificationActionHandler.notificationOpened(data);
+//
+//           // checkMethodOverrideOrNot=true;
+//            Lg.e("Call1","Call");
+//        }
+//        else
+//        {
+//           // checkMethodOverrideOrNot =false;
+//            Lg.e("Call2","Call");
+//
+//        }
+//    }
+//
 
 
     public static class Builder {
@@ -416,10 +425,12 @@ public class iZooto {
                     payload.setTag(payloadObj.optString(ShortpayloadConstant.TAG));
                     payload.setBanner(payloadObj.optString(ShortpayloadConstant.BANNER));
                     payload.setAct_num(payloadObj.optInt(ShortpayloadConstant.ACTNUM));
+
                     payload.setAct1name(payloadObj.optString(ShortpayloadConstant.ACT1NAME));
                     payload.setAct1link(payloadObj.optString(ShortpayloadConstant.ACT1LINK));
                     payload.setAct1icon(payloadObj.optString(ShortpayloadConstant.ACT1ICON));
                     payload.setAct1ID(payloadObj.optString(ShortpayloadConstant.ACT1ID));
+
                     payload.setAct2name(payloadObj.optString(ShortpayloadConstant.ACT2NAME));
                     payload.setAct2link(payloadObj.optString(ShortpayloadConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(ShortpayloadConstant.ACT2ICON));

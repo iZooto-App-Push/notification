@@ -28,11 +28,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class MainActivity extends AppCompatActivity implements NotificationHelperListener, NotificationActionHandler
+public class MainActivity extends AppCompatActivity implements NotificationHelperListener// NotificationActionHandler
 {
 
-    private static String CIPHER_NAME = "AES/CBC/PKCS5PADDING";
-    private static int CIPHER_KEY_LEN = 16;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         iZooto.initialize(this).setNotificationReceiveListener(this).build();
-        iZooto.initialize(this).setNotificationActionHandler(this).build();
+      //  iZooto.initialize(this).setNotificationActionHandler(this).build();
 
 
 
@@ -81,15 +79,9 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
     }
 
 
-    @Override
-    public void onNotificationView(String s) {
-        Log.e("NotificationClicked",s);
-
-    }
-
 
     @Override
-    public void notificationOpened(String data) {
+    public void onNotificationOpened(String data) {
         Log.e("NotificationClicked",data);
 
 

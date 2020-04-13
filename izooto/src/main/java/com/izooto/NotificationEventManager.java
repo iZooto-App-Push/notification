@@ -47,7 +47,6 @@ public class NotificationEventManager {
                 if (response != null) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        Log.e("JSON",jsonObject.toString());
                         parseJson(payload, jsonObject);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -80,8 +79,6 @@ public class NotificationEventManager {
             e.printStackTrace();
         }
     }
-
-
     private static String getParsedvalue(JSONObject jsonObject, String sourceString) {
         try {
             if (sourceString.startsWith("~"))
@@ -310,7 +307,6 @@ public class NotificationEventManager {
             public void run() {
                 String smallIcon = payload.getIcon();
                 String banner = payload.getBanner();
-                String actIcon=payload.getAct1icon();
                 try {
                     if (smallIcon != null && !smallIcon.isEmpty())
                         notificationIcon = Util.getBitmapFromURL(smallIcon);

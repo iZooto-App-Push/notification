@@ -66,6 +66,7 @@ public class RestClient {
 
             } else {
                 con = (HttpURLConnection) new URL(BASE_URL + url).openConnection();
+                Log.e("URL",BASE_URL+url);
             }
 
             con.setUseCaches(false);
