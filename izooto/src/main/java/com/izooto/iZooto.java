@@ -267,84 +267,190 @@ public class iZooto {
     }
     // send events  with event name and event data
     public static void addEvent(String eventName, HashMap<String,String> data) {
-        final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
         String database = data.toString();
-        String encodeData = "";
         if (database != null && eventName != null) {
-
+            if (!(eventName.length() > 32)) {
+                HashMap<String, String>  newListEvent= new HashMap<String, String>();
+                for (Map.Entry<String,String> refineEntry : data.entrySet()) {
+                    if (!refineEntry.getKey().isEmpty() && refineEntry.getKey()!=null){
+                        String newKey = refineEntry.getKey().toLowerCase();
+                        newListEvent.put(newKey,refineEntry.getValue());
+                    }
+                }
+                addEventAPI(eventName,newListEvent);
+            }else {
+                String newEventName = eventName.substring(0,32);
+                HashMap<String, String>  newListEvent= new HashMap<String, String>();
+                for (Map.Entry<String,String> refineEntry : data.entrySet()) {
+                    if (!refineEntry.getKey().isEmpty() && refineEntry.getKey()!=null){
+                        String newKey = refineEntry.getKey().toLowerCase();
+                        newListEvent.put(newKey,refineEntry.getValue());
+                    }
+                }
+                addEventAPI(newEventName,newListEvent);
+            }
+        }
+    }
+    public static void addEventAPI(String eventName,HashMap<String,String> data){
+        final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
+        String encodeData = "";
+        eventName = eventName.replaceAll(" ", "_");
+        HashMap<String, String> validationHashMap = checkValidationEvent(data, 1);
+        if (validationHashMap.size() > 0) {
             try {
-
-                JSONObject jsonObject = new JSONObject(database);
+                JSONObject jsonObject = new JSONObject(validationHashMap.toString());
                 encodeData = URLEncoder.encode(jsonObject.toString(), AppConstant.UTF);
-
-
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
             String api_url = "?pid=" + mIzooToAppId + "&act=" + eventName +
                     "&et=evt" + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&val=" + encodeData;//URLEncoder.encode(database, "UTF-8");
             RestClient.postRequest(RestClient.EVENT_URL + api_url, new RestClient.ResponseHandler() {
-
                 @Override
                 void onFailure(int statusCode, String response, Throwable throwable) {
                     super.onFailure(statusCode, response, throwable);
                 }
-
                 @Override
                 void onSuccess(String response) {
                     super.onSuccess(response);
-
-
                 }
-
-
             });
-
-
-
         }
     }
+    public static HashMap<String, String> checkValidationEvent(HashMap<String, String> data,int index){
+        HashMap<String, String>  newList= new HashMap<String, String>();
+        for (HashMap.Entry<String,String> array:data.entrySet()) {
+            if (index<=16&&array.getKey().length()<=32&&array.getValue().length()<=32){
+                newList.put(array.getKey(),array.getValue());
+                index ++;
+            }else if (index<=16&&array.getKey().length()>32&&array.getValue().length()>32){
+                String newKey = array.getKey().substring(0,32);
+                String newValue = array.getValue().substring(0,32);
+                newList.put(newKey,newValue);
+                index ++;
+            }else if (index<=16&&array.getKey().length()<=32&&array.getValue().length()>32){
+                String newValue = array.getValue().substring(0,32);
+                newList.put(array.getKey(),newValue);
+                index ++;
+            }else if (index<=16&&array.getKey().length()>32&&array.getValue().length()<=32){
+                String newKey = array.getKey().substring(0,32);
+                newList.put(newKey,array.getValue());
+                index ++;
+            }/*else {
+             *//* if (index>16){
+                int newindex = index-16;
+                array.getValue().substring(0,32);
+            }*//*
+        }*/
+        }
+        return newList;
+    }
+
+
+
+
+
+
     // send user properties
     public static void addUserProperty(HashMap<String,String> object)
     {
+//        final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
+//        String database = object.toString();
+//        String encodeData = "";
+//        if (database != null) {
+//
+//            try {
+//
+//                JSONObject jsonObject = new JSONObject(database);
+//                encodeData = URLEncoder.encode(jsonObject.toString(), AppConstant.UTF);
+//
+//
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//
+//            String api_url = "?pid=" + mIzooToAppId + "&act=add" +
+//                    "&et=userp" + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&val=" + encodeData;//URLEncoder.encode(database, "UTF-8");
+//            RestClient.postRequest(RestClient.PROPERTIES_URL + api_url, new RestClient.ResponseHandler() {
+//
+//                @Override
+//                void onFailure(int statusCode, String response, Throwable throwable) {
+//                    super.onFailure(statusCode, response, throwable);
+//                }
+//
+//                @Override
+//                void onSuccess(String response) {
+//                    super.onSuccess(response);
+//
+//
+//                }
+//
+//
+//            });
+//
+//
+//        }
+
         final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
         String database = object.toString();
         String encodeData = "";
         if (database != null) {
-
-            try {
-
-                JSONObject jsonObject = new JSONObject(database);
-                encodeData = URLEncoder.encode(jsonObject.toString(), AppConstant.UTF);
-
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            HashMap<String, String>  newListUserProfile = new HashMap<String, String>();
+            for (Map.Entry<String,String> refineEntry : object.entrySet()) {
+                if (!refineEntry.getKey().isEmpty() && refineEntry.getKey()!=null){
+                    String newKey = refineEntry.getKey().toLowerCase();
+                    newListUserProfile.put(newKey,refineEntry.getValue());
+                }
             }
-
-            String api_url = "?pid=" + mIzooToAppId + "&act=add" +
-                    "&et=userp" + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&val=" + encodeData;//URLEncoder.encode(database, "UTF-8");
-            RestClient.postRequest(RestClient.PROPERTIES_URL + api_url, new RestClient.ResponseHandler() {
-
-                @Override
-                void onFailure(int statusCode, String response, Throwable throwable) {
-                    super.onFailure(statusCode, response, throwable);
+            HashMap<String, String> filterHash = checkValidationUserProfile(newListUserProfile, 1);
+            if (filterHash.size() > 0) {
+                try {
+                    JSONObject jsonObject = new JSONObject(filterHash.toString());
+                    encodeData = URLEncoder.encode(jsonObject.toString(), AppConstant.UTF);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
-                @Override
-                void onSuccess(String response) {
-                    super.onSuccess(response);
-
-
-                }
-
-
-            });
-
-
+                String api_url = "?pid=" + mIzooToAppId + "&act=add" +
+                        "&et=userp" + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&val=" + encodeData;//URLEncoder.encode(database, "UTF-8");
+                RestClient.postRequest(RestClient.PROPERTIES_URL + api_url, new RestClient.ResponseHandler() {
+                    @Override
+                    void onFailure(int statusCode, String response, Throwable throwable) {
+                        super.onFailure(statusCode, response, throwable);
+                    }
+                    @Override
+                    void onSuccess(String response) {
+                        super.onSuccess(response);
+                    }
+                });
+            }
         }
+
     }
+    public static HashMap<String, String> checkValidationUserProfile(HashMap<String, String> data,int index){
+        HashMap<String, String>  newList= new HashMap<String, String>();
+        for (HashMap.Entry<String,String> array:data.entrySet()) {
+            if (index<=64&&array.getKey().length()<=32&&array.getValue().length()<=32){
+                newList.put(array.getKey(),array.getValue());
+                index ++;
+            }else if (index<=64&&array.getKey().length()>32&&array.getValue().length()>32){
+                String newKey = array.getKey().substring(0,32);
+                String newValue = array.getValue().substring(0,32);
+                newList.put(newKey,newValue);
+                index ++;
+            }else if (index<=64&&array.getKey().length()<=32&&array.getValue().length()>32){
+                String newValue = array.getValue().substring(0,32);
+                newList.put(array.getKey(),newValue);
+                index ++;
+            }else if (index<=64&&array.getKey().length()>32&&array.getValue().length()<=32){
+                String newKey = array.getKey().substring(0,32);
+                newList.put(newKey,array.getValue());
+                index ++;
+            }
+        }
+        return newList;
+    }
+
+
 
     public static void setIcon(int icon1)
     {
@@ -355,10 +461,7 @@ public class iZooto {
         Log.d(TAG, AppConstant.NOTIFICATIONRECEIVED);
 
         try {
-
-            // JSONObject payloadObj = new JSONObject(data);
             if(data.get(AppConstant.CAMPNAME)!=null) {
-
                 JSONObject payloadObj = new JSONObject(data.get(AppConstant.CAMPNAME));
                 if (payloadObj.optLong(AppConstant.CREATEDON) > PreferenceUtil.getInstance(iZooto.appContext).getLongValue(AppConstant.DEVICE_REGISTRATION_TIMESTAMP)) {
                     payload = new Payload();
@@ -374,17 +477,14 @@ public class iZooto {
                     payload.setTag(payloadObj.optString(AppConstant.TAG));
                     payload.setBanner(payloadObj.optString(AppConstant.BANNER));
                     payload.setAct_num(payloadObj.optInt(AppConstant.ACTNUM));
-
                     payload.setAct1name(payloadObj.optString(AppConstant.ACT1NAME));
                     payload.setAct1link(payloadObj.optString(AppConstant.ACT1LINK));
                     payload.setAct1icon(payloadObj.optString(AppConstant.ACT1ICON));
                     payload.setAct1ID(payloadObj.optString(AppConstant.ACT1ID));
-
                     payload.setAct2name(payloadObj.optString(AppConstant.ACT2NAME));
                     payload.setAct2link(payloadObj.optString(AppConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(AppConstant.ACT2ICON));
                     payload.setAct1ID(payloadObj.optString(AppConstant.ACT2ID));
-
                     payload.setInapp(payloadObj.optInt(AppConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(AppConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(AppConstant.ICONCOLOR));
