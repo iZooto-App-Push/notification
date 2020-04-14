@@ -1,6 +1,7 @@
 package com.app.izoototest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
@@ -11,20 +12,25 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.izooto.NotificationActionHandler;
 import com.izooto.NotificationHelperListener;
 import com.izooto.Payload;
+import com.izooto.WebViewActivity;
 import com.izooto.iZooto;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class MainActivity extends AppCompatActivity implements NotificationHelperListener
+public class MainActivity extends AppCompatActivity implements NotificationHelperListener// NotificationActionHandler
 {
 
-    private static String CIPHER_NAME = "AES/CBC/PKCS5PADDING";
-    private static int CIPHER_KEY_LEN = 16;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         iZooto.initialize(this).setNotificationReceiveListener(this).build();
+      //  iZooto.initialize(this).setNotificationActionHandler(this).build();
+
+
 
     }
 
@@ -60,43 +69,6 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
         return super.onOptionsItemSelected(item);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public static void main(String[] args) {
-
-        String data = decrypt("b07dfa9d56fc64df", "6Q+BXzyxAj+TbJcvFfsnMOl43Y1v0I0psyKaiDMK+gSLuaPjsFFUi+Ph1euQxhwSxHvU4oEJD5kQ1iXFrCW8MGaZRGFwWjJdwfaUsKTGal5YQ1x+ToX+IX0AmyN7rFxLcG5pHeYoAwmSTn9+olzEMMzluowtSGKveDEbMj8ZHLQlVoCTg/kdr1WXG1S9bS6q6cU2l5+kcYnc5ObceTMaOQ==:ZWY1YTc0YWZhMGM4YjM5OQ==");
-        Log.d("data", data);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public static String decrypt(String key, String data) {
-        try {
-            if (key.length() < CIPHER_KEY_LEN) {
-                int numPad = CIPHER_KEY_LEN - key.length();
-                StringBuilder keyBuilder = new StringBuilder(key);
-
-                for(int i = 0; i < numPad; ++i) {
-                    keyBuilder.append("0");
-                }
-
-                key = keyBuilder.toString();
-            } else if (key.length() > CIPHER_KEY_LEN) {
-                key = key.substring(0, CIPHER_KEY_LEN);
-            }
-
-            String[] parts = data.split(":");
-            IvParameterSpec iv = new IvParameterSpec(Base64.decode(parts[1], 0));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("ISO-8859-1"), "AES");
-            Cipher cipher = Cipher.getInstance(CIPHER_NAME);
-            cipher.init(2, skeySpec, iv);
-            byte[] decodedEncryptedData = Base64.decode(parts[0], 0);
-            byte[] original = cipher.doFinal(decodedEncryptedData);
-            return new String(original);
-        } catch (Exception var8) {
-            var8.printStackTrace();
-            return null;
-        }
-    }
-
 
 
 
@@ -107,12 +79,11 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
     }
 
 
+
     @Override
-    public void onNotificationView(String s) {
-        Log.e("NotificationClicked",s);
-     startActivity(new Intent(MainActivity.this,MainActivity.class));
+    public void onNotificationOpened(String data) {
+        Log.e("NotificationClicked",data);
+
 
     }
-
-
 }
