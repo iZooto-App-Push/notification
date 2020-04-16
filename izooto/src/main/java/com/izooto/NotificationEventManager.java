@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,19 +17,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Random;
-
 public class NotificationEventManager {
     private static Bitmap notificationIcon, notificationBanner;//,act1Icon,act2Icon;
     private static int icon;
@@ -69,7 +65,6 @@ public class NotificationEventManager {
 
     private static void parseJson(Payload payload, JSONObject jsonObject) {
         try {
-
             payload.setLink(getParsedvalue(jsonObject, payload.getLink()));
             payload.setTitle(getParsedvalue(jsonObject, payload.getTitle()));
             payload.setMessage(getParsedvalue(jsonObject, payload.getMessage()));
@@ -80,12 +75,11 @@ public class NotificationEventManager {
             payload.setAct2name(getParsedvalue(jsonObject, payload.getAct2name()));
             payload.setAct2link(getParsedvalue(jsonObject, payload.getAct2link()));
             showNotification(payload);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
     private static String getParsedvalue(JSONObject jsonObject, String sourceString) {
         try {
             if (sourceString.startsWith("~"))
@@ -99,8 +93,10 @@ public class NotificationEventManager {
                             String[] linkArray1 = linkArray[i].split("\\[");
                             if (jsonObject1 == null)
                                 jsonObject1 = jsonObject.getJSONArray(linkArray1[0]).getJSONObject(Integer.parseInt(linkArray1[1].replace("]", "")));
-                            else
+                            else {
                                 jsonObject1 = jsonObject1.getJSONArray(linkArray1[0]).getJSONObject(Integer.parseInt(linkArray1[1].replace("]", "")));
+
+                            }
 
                         } else {
                             return jsonObject1.optString(linkArray[i]);
@@ -147,7 +143,6 @@ public class NotificationEventManager {
                 {
                     icon=R.drawable.ic_notifications_black_24dp;
                 }
-
                 intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
                 Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 intent.putExtra(AppConstant.KEY_WEB_URL, link);
@@ -158,8 +153,14 @@ public class NotificationEventManager {
                 intent.putExtra(AppConstant.KEY_IN_BUTOON,0);
                 intent.putExtra(AppConstant.KEY_IN_ADDITIONALDATA,payload.getAp());
                 intent.putExtra(AppConstant.KEY_IN_PHONE,AppConstant.NO);
-                intent.putExtra(AppConstant.KEY_IN_ACT1ID,0);
-                intent.putExtra(AppConstant.KEY_IN_ACT2ID,0);
+                intent.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
+                intent.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
+                intent.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                intent.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                intent.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                intent.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                intent.putExtra(AppConstant.ACT2URL,payload.getAct2link());
+
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100) /* Request code */, intent,
                         PendingIntent.FLAG_ONE_SHOT);
 //                RemoteViews collapsedView = new RemoteViews(iZooto.appContext.getPackageName(), R.layout.remote_view);
@@ -213,6 +214,13 @@ public class NotificationEventManager {
                     btn1.putExtra(AppConstant.KEY_IN_ADDITIONALDATA, payload.getAp());
                     btn1.putExtra(AppConstant.KEY_IN_PHONE, phone);
                     btn1.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
+                    btn1.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
+                    btn1.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                    btn1.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                    btn1.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                    btn1.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                    btn1.putExtra(AppConstant.ACT2URL,payload.getAct2link());
+
 
 
                     PendingIntent pendingIntent1 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -246,7 +254,15 @@ public class NotificationEventManager {
                     btn2.putExtra(AppConstant.KEY_IN_BUTOON,2);
                     btn2.putExtra(AppConstant.KEY_IN_ADDITIONALDATA,payload.getAp());
                     btn2.putExtra(AppConstant.KEY_IN_PHONE,phone);
+                    btn2.putExtra(AppConstant.KEY_IN_ACT1ID,payload.getAct1ID());
                     btn2.putExtra(AppConstant.KEY_IN_ACT2ID,payload.getAct2ID());
+                    btn2.putExtra(AppConstant.LANDINGURL,payload.getLink());
+                    btn2.putExtra(AppConstant.ACT1TITLE,payload.getAct1name());
+                    btn2.putExtra(AppConstant.ACT2TITLE,payload.getAct2name());
+                    btn2.putExtra(AppConstant.ACT1URL,payload.getAct1link());
+                    btn2.putExtra(AppConstant.ACT2URL,payload.getAct2link());
+
+
 
 
                     PendingIntent pendingIntent2 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn2, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -306,7 +322,6 @@ public class NotificationEventManager {
             public void run() {
                 String smallIcon = payload.getIcon();
                 String banner = payload.getBanner();
-                String actIcon=payload.getAct1icon();
                 try {
                     if (smallIcon != null && !smallIcon.isEmpty())
                         notificationIcon = Util.getBitmapFromURL(smallIcon);
@@ -346,10 +361,16 @@ public class NotificationEventManager {
     {
 
 
-        String[] arrOfStr = url.split("&frwd=");
-        String[] second = arrOfStr[1].split("&bkey=");
-        String decodeData = new String(Base64.decode(second[0], Base64.DEFAULT));
-        return decodeData;
+      if(url.contains("&frwd")) {
+          String[] arrOfStr = url.split("&frwd=");
+          String[] second = arrOfStr[1].split("&bkey=");
+          String decodeData = new String(Base64.decode(second[0], Base64.DEFAULT));
+          return decodeData;
+      }
+      else
+      {
+          return url;
+      }
 
 
 

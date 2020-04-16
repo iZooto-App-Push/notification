@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.izooto">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,16 +9,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:usesCleartextTraffic="true"
-
-        >
-
+        android:usesCleartextTraffic="true">
         <activity
             android:name="com.izooto.WebViewActivity"
             android:screenOrientation="portrait"
-            android:exported="true"
-            android:launchMode="singleTask"
-            />
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
         <receiver
             android:name="com.izooto.NotificationActionReceiver"
             android:enabled="true">
@@ -38,6 +35,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+
         </service>
 
 

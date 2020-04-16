@@ -91,6 +91,7 @@ public interface AppConstant {
     String ACT2ICON="act2icon";
     String ACT1ID="act1id";
     String ACT2ID ="act2id";
+    String CFG="cfg";
 
 
     String NOTIFICATIONBODY="notifcationbody";
@@ -107,6 +108,12 @@ public interface AppConstant {
 
     //// short payload
     String webViewData = "WebViewClient: shouldOverrideUrlLoading";
+    String LANDINGURL="landingURL";
+    String ACT1URL = "act1URL";
+    String ACT2URL="act2URL";
+    String ACT1TITLE="act1title";
+    String ACT2TITLE="act2title";
+
 
 
 }

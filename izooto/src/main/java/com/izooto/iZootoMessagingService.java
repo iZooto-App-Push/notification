@@ -131,6 +131,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setAct2link(payloadObj.optString(AppConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(AppConstant.ACT2ICON));
                     payload.setAct2ID(payloadObj.optString(AppConstant.ACT2ID));
+
                     payload.setInapp(payloadObj.optInt(AppConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(AppConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(AppConstant.ICONCOLOR));
@@ -144,6 +145,8 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setPriority(payloadObj.optInt(AppConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(AppConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(AppConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(AppConstant.CFG));
+
                 }
                 else
                     return;
@@ -176,6 +179,7 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setAct2link(payloadObj.optString(ShortpayloadConstant.ACT2LINK));
                     payload.setAct2icon(payloadObj.optString(ShortpayloadConstant.ACT2ICON));
                     payload.setAct2ID(payloadObj.optString(ShortpayloadConstant.ACT2ID));
+
                     payload.setInapp(payloadObj.optInt(ShortpayloadConstant.INAPP));
                     payload.setTrayicon(payloadObj.optString(ShortpayloadConstant.TARYICON));
                     payload.setSmallIconAccentColor(payloadObj.optString(ShortpayloadConstant.ICONCOLOR));
@@ -189,15 +193,11 @@ public class iZootoMessagingService extends FirebaseMessagingService {
                     payload.setPriority(payloadObj.optInt(ShortpayloadConstant.PRIORITY));
                     payload.setRawPayload(payloadObj.optString(ShortpayloadConstant.RAWDATA));
                     payload.setAp(payloadObj.optString(ShortpayloadConstant.ADDITIONALPARAM));
+                    payload.setCfg(payloadObj.optInt(ShortpayloadConstant.CFG));
                 }
                 else
                     return;
             }
-
-
-
-
-            // return;
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -212,6 +212,8 @@ public class iZootoMessagingService extends FirebaseMessagingService {
             @Override
             public void run() {
                 iZooto.processNotificationReceived(payload);
+                iZooto.notificationView(payload);
+
             } // This is your code
         };
         mainHandler.post(myRunnable);
