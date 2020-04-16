@@ -208,43 +208,16 @@ public class iZooto {
         if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
         {
             mBuilder.mNotificationHelper.onNotificationOpened(data);
-
-            // checkMethodOverrideOrNot=true;
             Lg.e("Call1","Call");
         }
-        else
-        {
-            // checkMethodOverrideOrNot =false;
-            Lg.e("Call2","Call");
 
-        }
     }
-
-
-//    public static void notificationActionHandler(String data)
-//    {
-//        if(mBuilder!=null && mBuilder.mNotificationActionHandler!=null)
-//        {
-//            mBuilder.mNotificationActionHandler.notificationOpened(data);
-//
-//           // checkMethodOverrideOrNot=true;
-//            Lg.e("Call1","Call");
-//        }
-//        else
-//        {
-//           // checkMethodOverrideOrNot =false;
-//            Lg.e("Call2","Call");
-//
-//        }
-//    }
-//
-
+    
 
     public static class Builder {
         Context mContext;
         private TokenReceivedListener mTokenReceivedListener;
         private NotificationHelperListener mNotificationHelper;
-        private NotificationActionHandler mNotificationActionHandler;
         private Builder(Context context) {
             mContext = context;
         }
