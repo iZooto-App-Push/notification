@@ -25,7 +25,7 @@ import static com.izooto.AppConstant.TAG;
 public class iZooto {
 
     static Context appContext;
-    private static String senderId, mEncryptionKey;
+    private static String senderId;
     public static int mIzooToAppId;
     public static Builder mBuilder;
     public static int icon;
@@ -170,7 +170,6 @@ public class iZooto {
                 @Override
                 void onFailure(int statusCode, String response, Throwable throwable) {
                     super.onFailure(statusCode, response, throwable);
-                    // Log.e("ResponseGet", "" + statusCode);
 
                 }
             });
@@ -199,7 +198,6 @@ public class iZooto {
             if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
             {
                 mBuilder.mNotificationHelper.onNotificationReceived(payload);
-                Log.e("Used","data");
             }
         }
     }
@@ -208,7 +206,6 @@ public class iZooto {
         if(mBuilder!=null && mBuilder.mNotificationHelper!=null)
         {
             mBuilder.mNotificationHelper.onNotificationOpened(data);
-            Lg.e("Call1","Call");
         }
 
     }
@@ -327,43 +324,6 @@ public class iZooto {
     // send user properties
     public static void addUserProperty(HashMap<String,String> object)
     {
-//        final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
-//        String database = object.toString();
-//        String encodeData = "";
-//        if (database != null) {
-//
-//            try {
-//
-//                JSONObject jsonObject = new JSONObject(database);
-//                encodeData = URLEncoder.encode(jsonObject.toString(), AppConstant.UTF);
-//
-//
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//
-//            String api_url = "?pid=" + mIzooToAppId + "&act=add" +
-//                    "&et=userp" + "&bKey=" + preferenceUtil.getStringData(AppConstant.FCM_DEVICE_TOKEN) + "&val=" + encodeData;//URLEncoder.encode(database, "UTF-8");
-//            RestClient.postRequest(RestClient.PROPERTIES_URL + api_url, new RestClient.ResponseHandler() {
-//
-//                @Override
-//                void onFailure(int statusCode, String response, Throwable throwable) {
-//                    super.onFailure(statusCode, response, throwable);
-//                }
-//
-//                @Override
-//                void onSuccess(String response) {
-//                    super.onSuccess(response);
-//
-//
-//                }
-//
-//
-//            });
-//
-//
-//        }
-
         final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance(appContext);
         String database = object.toString();
         String encodeData = "";
